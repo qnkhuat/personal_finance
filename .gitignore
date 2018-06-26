@@ -1,0 +1,3 @@
+*.pyc
+__pyccache__
+prepros-6.config
