@@ -16,12 +16,12 @@ class IncomeForm(generic.View):
 
         if form.is_valid():
             customer = form.save(commit = False)
-            user     = form.cleaned_data['user_now']
+            user     = form.cleaned_data['user']
             type     = form.cleaned_data['type']
             amount   = form.cleaned_data['amount']
             notes    = form.cleaned_data['notes']
-            customer.user_now.cash = form.cleaned_data['amount']
-            customer.user_now.save()
+            customer.user.cash = form.cleaned_data['amount']
+            customer.user.save()
             customer.save()
         else:
             print('not valid')

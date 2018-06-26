@@ -29,7 +29,7 @@ class CashInAndOut(models.Model):
     notes  = models.CharField(verbose_name      = 'Ghi chú',max_length        = 255,blank=True)
     time   = models.DateField(verbose_name      = 'Thời gian',auto_now   = True)
     def __str__(self):
-        return '{} - {}'.format([type for type in self.EXPENSEETYPES if type[0]==self.type][0][1],self.amount)
+        return '{} - {}'.format([type for type in self.TYPES if type[0]==self.type][0][1],self.amount)
 
 class Income(CashInAndOut):
     '''
@@ -37,15 +37,14 @@ class Income(CashInAndOut):
     - fixed income : is your certain mone receive monthly
     - interests    : like interest from investment - each time receive need to add or setup auto adding for this
     - others       : like the money u receive from side project
-    amount : the amount of a income
     '''
-    INCOMETYPES = (
+    TYPES = (
     ('f', 'Thu nhập cố định'),
     ('i','Tiền lãi'),
     ('b','Vay'),
     ('o', 'Khác'),
     )
-    type   = models.CharField(verbose_name      = 'Loại thu nhập',max_length  = 1,choices = INCOMETYPES,blank=False)
+    type   = models.CharField(verbose_name      = 'Loại thu nhập',max_length  = 1,choices = TYPES,blank=False)
     class Meta:
         verbose_name_plural= 'Thu nhập'
 
@@ -59,7 +58,7 @@ class Expense(CashInAndOut):
     Học tập : mua sách , học phí...
     Gia đình : Con cái , sửa chữa nhà cửa ...
     '''
-    EXPENSEETYPES = (
+    TYPES = (
     ('f','Ăn'),
     ('u','Dịch vụ'),
     ('b','Mua sắm'),
@@ -67,6 +66,6 @@ class Expense(CashInAndOut):
     ('s','Học tập'),
     ('f','Gia đình')
     )
-    type    = models.CharField(verbose_name    = 'Loại chi tiêu',max_length  = 1,choices = EXPENSEETYPES,blank=False)
+    type    = models.CharField(verbose_name    = 'Loại chi tiêu',max_length  = 1,choices = TYPES,blank=False)
     class Meta:
         verbose_name_plural = 'Chi tiêu'
