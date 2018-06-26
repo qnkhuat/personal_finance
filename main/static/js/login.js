@@ -1,29 +1,30 @@
-var email = document.querySelector('#email'),
- 		cash = document.querySelector('#cash'),
-		password      = document.querySelector('#password'),
-		mySVG         = document.querySelector('.svgContainer'),
-		armL          = document.querySelector('.armL'),
-		armR          = document.querySelector('.armR'),
-		eyeL          = document.querySelector('.eyeL'),
-		eyeR          = document.querySelector('.eyeR'),
-		nose          = document.querySelector('.nose'),
-		mouth         = document.querySelector('.mouth'),
-		mouthBG       = document.querySelector('.mouthBG'),
-		mouthSmallBG  = document.querySelector('.mouthSmallBG'),
-		mouthMediumBG = document.querySelector('.mouthMediumBG'),
-		mouthLargeBG  = document.querySelector('.mouthLargeBG'),
-		mouthMaskPath = document.querySelector('#mouthMaskPath'),
-		mouthOutline  = document.querySelector('.mouthOutline'),
-		tooth         = document.querySelector('.tooth'),
-		tongue        = document.querySelector('.tongue'),
-		chin          = document.querySelector('.chin'),
-		face          = document.querySelector('.face'),
-		eyebrow       = document.querySelector('.eyebrow'),
-		outerEarL     = document.querySelector('.earL .outerEar'),
-		outerEarR     = document.querySelector('.earR .outerEar'),
-		earHairL      = document.querySelector('.earL .earHair'),
-		earHairR      = document.querySelector('.earR .earHair'),
-		hair          = document.querySelector('.hair');
+var username         = document.querySelector('#id_username'),
+ 		cash             = document.querySelector('#id_cash'),
+		password         = document.querySelector('#id_password'),
+		password_confirm = document.querySelector('#id_confirm_password'),
+		mySVG            = document.querySelector('.svgContainer'),
+		armL             = document.querySelector('.armL'),
+		armR             = document.querySelector('.armR'),
+		eyeL             = document.querySelector('.eyeL'),
+		eyeR             = document.querySelector('.eyeR'),
+		nose             = document.querySelector('.nose'),
+		mouth            = document.querySelector('.mouth'),
+		mouthBG          = document.querySelector('.mouthBG'),
+		mouthSmallBG     = document.querySelector('.mouthSmallBG'),
+		mouthMediumBG    = document.querySelector('.mouthMediumBG'),
+		mouthLargeBG     = document.querySelector('.mouthLargeBG'),
+		mouthMaskPath    = document.querySelector('#mouthMaskPath'),
+		mouthOutline     = document.querySelector('.mouthOutline'),
+		tooth            = document.querySelector('.tooth'),
+		tongue           = document.querySelector('.tongue'),
+		chin             = document.querySelector('.chin'),
+		face             = document.querySelector('.face'),
+		eyebrow          = document.querySelector('.eyebrow'),
+		outerEarL        = document.querySelector('.earL .outerEar'),
+		outerEarR        = document.querySelector('.earR .outerEar'),
+		earHairL         = document.querySelector('.earL .earHair'),
+		earHairR         = document.querySelector('.earR .earHair'),
+		hair             = document.querySelector('.hair');
 var caretPos,curEmailIndex,screenCenter, svgCoords, eyeMaxHorizD = 20, eyeMaxVertD = 10, noseMaxHorizD = 23, noseMaxVertD = 10, dFromC, eyeDistH, eyeLDistV, eyeRDistV, eyeDistR, mouthStatus = "small";
 
 function getCoord(e) {
@@ -219,17 +220,25 @@ function getPosition(el) {
 	};
 }
 
-email.addEventListener('focus', onEmailFocus);
-email.addEventListener('blur', onEmailBlur);
-email.addEventListener('input', onEmailInput);
+username.addEventListener('focus', onEmailFocus);
+username.addEventListener('blur', onEmailBlur);
+username.addEventListener('input', onEmailInput);
 
-cash.addEventListener('focus', onEmailFocus);
-cash.addEventListener('blur', onEmailBlur);
-cash.addEventListener('input', onEmailInput);
 
+// this things is for login page
+try{
+	cash.addEventListener('focus', onEmailFocus);
+	cash.addEventListener('blur', onEmailBlur);
+	cash.addEventListener('input', onEmailInput);
+	password_confirm.addEventListener('focus', onPasswordFocus);
+	password_confirm.addEventListener('blur', onPasswordBlur);
+}
+catch(eer){}
 
 password.addEventListener('focus', onPasswordFocus);
 password.addEventListener('blur', onPasswordBlur);
+
+
 TweenMax.set(armL, {x: -93, y: 220, rotation: 105, transformOrigin: "top left"});
 TweenMax.set(armR, {x: -93, y: 220, rotation: -105, transformOrigin: "top right"});
 
@@ -246,7 +255,6 @@ function validate(evt) {
     if(theEvent.preventDefault) theEvent.preventDefault();
   }
 }
-
 
 
 function ReplaceNumberWithCommas(yourNumber) {

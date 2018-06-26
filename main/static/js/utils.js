@@ -7,7 +7,7 @@
 	$(function() {
 
 		var $form = $( "form" );
-		var $input = $( "form .cash" );
+		var $input = $( "form #id_cash" );
 
 		$input.on( "keyup", function( event ) {
 

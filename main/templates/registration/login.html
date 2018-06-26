@@ -100,6 +100,18 @@
       </svg>
     </div>
   </div>
+  {% if form.errors %}
+  <p>Your username and password didn't match. Please try again.</p>
+  {% endif %}
+
+  {% if next %}
+      {% if user.is_authenticated %}
+      <p>Your account doesn't have access to this page. To proceed,
+      please login with an account that has access.</p>
+      {% else %}
+      <p>Please login to see this page.</p>
+      {% endif %}
+  {% endif %}
   {% if messages %}
       {% for message in messages %}
         <h3 class="{{ message.tags }}">{{ message }}</h3>
@@ -110,13 +122,9 @@
       {{ field.label_tag }} {{ field }}
   {% endfor %}
   </div>
-    {% if site == 'login' %}
     <button type='submit'>Log in</button>
     <a href="{% url 'main:signin' %}" class='text-center signin_login'>Sign In</a>
-    {% elif site == 'signin' %}
-    <button type='submit'>Sign in</button>
-    <a href="{% url 'main:login' %}" class='text-center signin_login'>Log In</a>
-    {% endif %}
+
 </form>
 
 
