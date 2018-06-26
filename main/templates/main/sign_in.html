@@ -9,7 +9,7 @@
   <body>
     <form method="post" action='' method='post'>
       {% csrf_token %}
-        <h3>look</h3>
+      <h3>Start of the form</h3>
         {% for field in form %}
             {{ field.label_tag }} {{ field }}
         {% endfor %}

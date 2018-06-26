@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-# from django.dispatch import receiver
-# from django.core.signals import post_save
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 class Member(models.Model):
     '''
@@ -16,6 +16,12 @@ class Member(models.Model):
         verbose_name        = 'Người dùng'
         verbose_name_plural = 'Người dùng'
 
+    @receiver(post_save, sender=User)
+    def update_user_profile(sender, instance, created, **kwargs):
+        if created:
+            # cash =1 is just for instance
+            Member.objects.create(user=instance,cash=1)
+        instance.member.save()
 
 
 
@@ -44,7 +50,7 @@ class Income(CashInAndOut):
     ('b','Vay'),
     ('o', 'Khác'),
     )
-    type   = models.CharField(verbose_name      = 'Loại thu nhập',max_length  = 1,choices = TYPES,blank=False)
+    type = models.CharField(verbose_name = 'Loại thu nhập',max_length = 1,choices = TYPES,blank = False)
     class Meta:
         verbose_name_plural= 'Thu nhập'
 
@@ -66,6 +72,6 @@ class Expense(CashInAndOut):
     ('s','Học tập'),
     ('f','Gia đình')
     )
-    type    = models.CharField(verbose_name    = 'Loại chi tiêu',max_length  = 1,choices = TYPES,blank=False)
+    type = models.CharField(verbose_name = 'Loại chi tiêu',max_length = 1,choices = TYPES,blank = False)
     class Meta:
         verbose_name_plural = 'Chi tiêu'
