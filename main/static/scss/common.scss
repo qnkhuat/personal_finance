@@ -1,0 +1,10 @@
+label[for=cash]{
+  position: relative;
+  &:before{
+    content: '₫';
+    position: absolute;
+    bottom: -63px;
+    right: 10px;
+    font-size: 30px;
+  }
+}

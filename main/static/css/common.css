@@ -1,0 +1,9 @@
+@charset "UTF-8";
+label[for=cash] {
+  position: relative; }
+  label[for=cash]:before {
+    content: '₫';
+    position: absolute;
+    bottom: -63px;
+    right: 10px;
+    font-size: 30px; }

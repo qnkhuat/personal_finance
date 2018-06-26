@@ -56,7 +56,7 @@ class ExpenseInput(generic.View):
 
 class UserSignIn(generic.View):
     form_class = UserForm
-    template_name = 'main/sign_in.html'
+    template_name = 'main/login.html'
 
     def get(self,request):
         form = self.form_class(None)
