@@ -7,23 +7,31 @@ class Member(models.Model):
     '''
     cash : is the cash you're having
     '''
-    user_now = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     cash = models.FloatField(verbose_name='Tiền mặt')
     def __str__(self):
-        return '{} - {} '.format(self.user_now,self.cash)
+        return '{} - {} '.format(self.user,self.cash)
 
     class Meta:
         verbose_name        = 'Người dùng'
         verbose_name_plural = 'Người dùng'
 
 
+
+
 '''
-INCOME and EXPENSE is to compute monthly finance only
+INCOME and EXPENSE is for compute monthly finance only
 borrow,lend,invest... is another model that take to compute asset
 '''
+class CashInAndOut(models.Model):
+    user   = models.ForeignKey(Member,on_delete = models.CASCADE,verbose_name = 'Người dùng')
+    amount = models.FloatField(verbose_name     = 'Số tiền',blank             = False)
+    notes  = models.CharField(verbose_name      = 'Ghi chú',max_length        = 255,blank=True)
+    time   = models.DateField(verbose_name      = 'Thời gian',auto_now   = True)
+    def __str__(self):
+        return '{} - {}'.format([type for type in self.EXPENSEETYPES if type[0]==self.type][0][1],self.amount)
 
-
-class Income(models.Model):
+class Income(CashInAndOut):
     '''
     type : the type of a Income
     - fixed income : is your certain mone receive monthly
@@ -36,25 +44,12 @@ class Income(models.Model):
     ('i','Tiền lãi'),
     ('b','Vay'),
     ('o', 'Khác'),
-
     )
-    user_now   = models.ForeignKey(Member,on_delete = models.CASCADE,verbose_name = 'Id người dùng')
     type   = models.CharField(verbose_name      = 'Loại thu nhập',max_length  = 1,choices = INCOMETYPES,blank=False)
-    amount = models.FloatField(verbose_name     = 'Số tiền',blank             = False)
-    notes  = models.CharField(verbose_name      = 'Ghi chú',max_length        = 255,blank=True)
-    time   = models.DateField(verbose_name      = 'Thời gian nhận',auto_now   = True)
-    def __str__(self):
-        return '{} - {}'.format(self.type,self.amount)
-    # def save(self, *args, **kwargs):
-    #     super(Member, self).save(*args, **kwargs)
-    #     print('this is user_now',self.user_now.cash)
-    #     self.user_now.cash=10000
-    #     self.user_now.save()
-
     class Meta:
         verbose_name_plural= 'Thu nhập'
 
-class Expense(models.Model):
+class Expense(CashInAndOut):
     '''
     type :
     Ăn : Ăn uống hàng thực phẩm hàng ngày
@@ -72,12 +67,6 @@ class Expense(models.Model):
     ('s','Học tập'),
     ('f','Gia đình')
     )
-    user_now = models.ForeignKey(Member,on_delete = models.CASCADE,verbose_name = 'Id người dùng')
     type    = models.CharField(verbose_name    = 'Loại chi tiêu',max_length  = 1,choices = EXPENSEETYPES,blank=False)
-    amount  = models.FloatField(verbose_name   = 'Số tiền',blank=False)
-    notes   = models.CharField(verbose_name    = 'Ghi chú',max_length        = 255)
-    time    = models.DateField(verbose_name    = 'Thời gian tiêu',auto_now   = True)
-    def __str__(self):
-        return '{} - {}'.format([type for type in self.EXPENSEETYPES if type[0]==self.type ][0][1],self.amount)
     class Meta:
         verbose_name_plural = 'Chi tiêu'
