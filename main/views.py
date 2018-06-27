@@ -7,62 +7,67 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 # my files
 from .forms import *
-from .worker import *
+
 
 @login_required
 def index(request):
     return render(request,'main/dashboard.html')
 
-
-
-class IncomeInput(LoginRequiredMixin,generic.View):
-    form_class  = IncomeForm
+class CashInAndOutInput(LoginRequiredMixin,generic.View):
     template_name = 'main/income.html'
-    # redirect_field_name = 'main:login'
+
     def get(self,request):
         form = self.form_class(None)
         return render(request, self.template_name,{'form':form})
 
     def post(self,request):
         form = self.form_class(request.POST)
-
         if form.is_valid():
-            user    = form.save(commit = False)
+            money    = form.save(commit = False)
             _member = request.user.member
-            # _member = form.cleaned_data['user']
             _type   = form.cleaned_data['type']
             _amount = form.cleaned_data['amount']
             _notes  = form.cleaned_data['notes']
-            updateIncome(_member,_type,_amount)
+
+            money.user = request.user.member
+            money.type=_type
+            money.amount=_amount
+            money.notes=_notes
+            money.save()
+
+            self.update(_member,_type,_amount)
+
+
+
         else:
             messages.warning(request, 'Something went wrong')
         return render(request, self.template_name,{'form':form})
 
 
-class ExpenseInput(LoginRequiredMixin,generic.View):
+
+class ExpenseInput(CashInAndOutInput):
     form_class  = ExpenseForm
-    template_name = 'main/income.html'
-    redirect_field_name = 'redirect_to'
+    def update(self,_member,_type,_amount):
+        _member.cash -= _amount
+        _member.save()
 
-    def get(self,request):
-        form = self.form_class(None)
-        return render(request, self.template_name,{'form':form})
 
-    def post(self,request):
-        form = self.form_class(request.POST)
+class IncomeInput(CashInAndOutInput):
+    form_class  = IncomeForm
+    def update(self,_member,_type,_amount):
+        if _type in ['f','o']: #fixed income or other
+            _member.cash += _amount
+            _member.save()
 
-        if form.is_valid():
-            customer = form.save(commit = False)
-            user = request.user.user
-            # user     = form.cleaned_data['user']
-            _type     = form.cleaned_data['type']
-            _amount   = form.cleaned_data['amount']
-            _notes    = form.cleaned_data['notes']
-            updateExpense(user,_type,_amount)
-            customer.save()
-        else:
-            messages.warning(request, 'Something went wrong')
-        return render(request, self.template_name,{'form':form})
+        if _type=='i': # interests
+            # TODO: need to automate this by if this type auto list the list of interest
+            _member.cash += _amount
+            _member.save()
+
+        if _type =='b': # borrow
+            # TODO: need to subtract in the total asset
+            _member.cash += _amount
+            _member.save()
 
 
 class UserSignIn(generic.View):
@@ -81,7 +86,6 @@ class UserSignIn(generic.View):
             password         = form.cleaned_data['password']
             cash             = float(form.cleaned_data['cash'].replace(',',''))
             confirm_password = form.cleaned_data["confirm_password"]
-            print('cash',cash)
 
             #check password
             if password != confirm_password:
@@ -100,6 +104,18 @@ class UserSignIn(generic.View):
         # print(form)
         messages.warning(request, 'User name existed or not valid')
         return render(request,self.template_name,{'form':form,'site':'signin'})
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
