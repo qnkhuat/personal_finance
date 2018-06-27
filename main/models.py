@@ -7,7 +7,7 @@ class Member(models.Model):
     '''
     cash : is the cash you're having
     '''
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='member')
     cash = models.FloatField(verbose_name='Tiền mặt')
     def __str__(self):
         return '{} - {} '.format(self.user,self.cash)
@@ -19,9 +19,9 @@ class Member(models.Model):
     @receiver(post_save, sender=User)
     def update_user_profile(sender, instance, created, **kwargs):
         if created:
-            # cash =1 is just for instance
+            # NOTE:cash =1 is just for instance
             Member.objects.create(user=instance,cash=1)
-        instance.member.save()
+        instance.user.save()
 
 
 

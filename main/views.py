@@ -9,6 +9,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 from .worker import *
 
+@login_required
+def index(request):
+    return render(request,'main/dashboard.html')
+
+
 
 class IncomeInput(LoginRequiredMixin,generic.View):
     form_class  = IncomeForm
@@ -22,13 +27,13 @@ class IncomeInput(LoginRequiredMixin,generic.View):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-            customer = form.save(commit = False)
-            user     = form.cleaned_data['user']
-            type     = form.cleaned_data['type']
-            amount   = form.cleaned_data['amount']
-            notes    = form.cleaned_data['notes']
-            updateIncome(user,type,amount)
-            customer.save()
+            user    = form.save(commit = False)
+            _member = request.user.member
+            # _member = form.cleaned_data['user']
+            _type   = form.cleaned_data['type']
+            _amount = form.cleaned_data['amount']
+            _notes  = form.cleaned_data['notes']
+            updateIncome(_member,_type,_amount)
         else:
             messages.warning(request, 'Something went wrong')
         return render(request, self.template_name,{'form':form})
@@ -48,11 +53,12 @@ class ExpenseInput(LoginRequiredMixin,generic.View):
 
         if form.is_valid():
             customer = form.save(commit = False)
-            user     = form.cleaned_data['user']
-            type     = form.cleaned_data['type']
-            amount   = form.cleaned_data['amount']
-            notes    = form.cleaned_data['notes']
-            updateExpense(user,type,amount)
+            user = request.user.user
+            # user     = form.cleaned_data['user']
+            _type     = form.cleaned_data['type']
+            _amount   = form.cleaned_data['amount']
+            _notes    = form.cleaned_data['notes']
+            updateExpense(user,_type,_amount)
             customer.save()
         else:
             messages.warning(request, 'Something went wrong')
@@ -83,10 +89,6 @@ class UserSignIn(generic.View):
                 return render(request,self.template_name,{'form':form,'site':'signin'})
 
             user.set_password(password)
-            user.save()
-            #create user first then create member
-            user.refresh_from_db()  # load the profile instance created by the signal
-            user.member.cash = cash
             user.save()
 
             #login user objects if succeed
