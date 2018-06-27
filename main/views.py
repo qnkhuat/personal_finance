@@ -93,6 +93,11 @@ class UserSignIn(generic.View):
                 return render(request,self.template_name,{'form':form,'site':'signin'})
 
             user.set_password(password)
+
+            user.save()
+
+            user.refresh_from_db()  # load the profile instance created by the signal
+            user.member.cash = cash
             user.save()
 
             #login user objects if succeed

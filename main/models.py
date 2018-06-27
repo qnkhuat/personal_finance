@@ -29,7 +29,7 @@ INCOME and EXPENSE is for compute monthly finance only
 borrow,lend,invest... is another model that take to compute asset
 '''
 class CashInAndOut(models.Model):
-
+    user   = models.ForeignKey(Member,on_delete = models.CASCADE,verbose_name = 'Người dùng')
     amount = models.FloatField(verbose_name     = 'Số tiền',blank             = False)
     notes  = models.CharField(verbose_name      = 'Ghi chú',max_length        = 255,blank=True)
     time   = models.DateField(verbose_name      = 'Thời gian',auto_now   = True)
@@ -50,7 +50,7 @@ class Income(CashInAndOut):
     ('o', 'Khác'),
     )
 
-    user   = models.ForeignKey(Member,on_delete = models.CASCADE,verbose_name = 'Người dùng')
+
     type = models.CharField(verbose_name = 'Loại thu nhập',max_length = 1,choices = TYPES,blank = False)
 
     def __str__(self):
@@ -76,7 +76,7 @@ class Expense(CashInAndOut):
     ('s','Học tập'),
     ('f','Gia đình')
     )
-    user   = models.ForeignKey(Member,on_delete = models.CASCADE,verbose_name = 'Người dùng')
+
     type = models.CharField(verbose_name = 'Loại chi tiêu',max_length = 1,choices = TYPES,blank = False)
 
     def __str__(self):
